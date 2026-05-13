@@ -40,17 +40,6 @@ def menu():
     12. Salir
     '''
 
-    menu_categorias = '''
-    Categoría del problema:
-    1. Hardware
-    2. Software
-    3. Red
-    4. Cuenta de usuario
-    5. Otro
-    '''
-
-    categorias = {1: "hardware", 2: "software", 3: "red",
-                  4: "cuenta de usuario", 5: "otro"}
 
     soporteTecnico = SoporteTecnico()  # se mantiene entre sesiones
 
@@ -69,17 +58,11 @@ def menu():
 
                     if opcion == 1:
                         nombre = input("Nombre: ")
-                        descripcion = input("Descripción: ")
-                        try:
-                            categoria = categorias[int(input(f"{menu_categorias} Respuesta: "))]
-                        except (ValueError, KeyError):
-                            print("Categoría inválida")
-                            continue
+                        descripcion = input("Descripción del problema: ")
                         horaLlegada = datetime.now()
-                        ticket = Ticket(soporteTecnico.contador_id, nombre, descripcion, categoria, horaLlegada)
+                        ticket = Ticket(soporteTecnico.contador_id, nombre, descripcion, horaLlegada)
                         soporteTecnico.agregar_ticket(ticket)
                         soporteTecnico.contador_id += 1
-
                     elif opcion == 2:
                         soporteTecnico.posicion_ticket()
 
