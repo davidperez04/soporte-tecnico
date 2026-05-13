@@ -52,90 +52,92 @@ def menu():
     categorias = {1: "hardware", 2: "software", 3: "red",
                   4: "cuenta de usuario", 5: "otro"}
 
-    soporteTecnico = SoporteTecnico()
-    sesion = Sesion()
+    soporteTecnico = SoporteTecnico()  # se mantiene entre sesiones
 
-    if not sesion.iniciar():
-        return
+    while True:  # loop externo, vuelve al login cuando alguien sale
+        sesion = Sesion()
 
-    state = True
+        if not sesion.iniciar():
+            continue  # si falla el login vuelve a preguntar
 
-    while state:
-        try:
-            if sesion.es_usuario():
-                opcion = int(input(f"{menu_usuario} Respuesta: "))
+        state = True
 
-                if opcion == 1:
-                    nombre = input("Nombre: ")
-                    descripcion = input("Descripción: ")
-                    try:
-                        categoria = categorias[int(input(f"{menu_categorias} Respuesta: "))]
-                    except (ValueError, KeyError):
-                        print("Categoría inválida")
-                        continue
-                    horaLlegada = datetime.now()
-                    ticket = Ticket(soporteTecnico.contador_id, nombre, descripcion, categoria, horaLlegada)
-                    soporteTecnico.agregar_ticket(ticket)
-                    soporteTecnico.contador_id += 1
+        while state:
+            try:
+                if sesion.es_usuario():
+                    opcion = int(input(f"{menu_usuario} Respuesta: "))
 
-                elif opcion == 2:
-                    soporteTecnico.posicion_ticket()
+                    if opcion == 1:
+                        nombre = input("Nombre: ")
+                        descripcion = input("Descripción: ")
+                        try:
+                            categoria = categorias[int(input(f"{menu_categorias} Respuesta: "))]
+                        except (ValueError, KeyError):
+                            print("Categoría inválida")
+                            continue
+                        horaLlegada = datetime.now()
+                        ticket = Ticket(soporteTecnico.contador_id, nombre, descripcion, categoria, horaLlegada)
+                        soporteTecnico.agregar_ticket(ticket)
+                        soporteTecnico.contador_id += 1
 
-                elif opcion == 3:
-                    soporteTecnico.tiempo_de_espera()
+                    elif opcion == 2:
+                        soporteTecnico.posicion_ticket()
 
-                elif opcion == 4:
-                    soporteTecnico.cancelar_ticket()
+                    elif opcion == 3:
+                        soporteTecnico.tiempo_de_espera()
 
-                elif opcion == 5:
-                    print("Saliendo del sistema...")
-                    state = False
+                    elif opcion == 4:
+                        soporteTecnico.cancelar_ticket()
 
-                else:
-                    print("Opción inválida")
+                    elif opcion == 5:
+                        print("Sesión cerrada, volviendo al inicio...")
+                        state = False
 
-            elif sesion.es_agente():
-                opcion = int(input(f"{menu_agente} Respuesta: "))
+                    else:
+                        print("Opción inválida")
 
-                if opcion == 1:
-                    soporteTecnico.ver_cola()
+                elif sesion.es_agente():
+                    opcion = int(input(f"{menu_agente} Respuesta: "))
 
-                elif opcion == 2:
-                    soporteTecnico.atender_ticket()
+                    if opcion == 1:
+                        soporteTecnico.ver_cola()
 
-                elif opcion == 3:
-                    soporteTecnico.ver_ticket_en_atencion()
+                    elif opcion == 2:
+                        soporteTecnico.atender_ticket()
 
-                elif opcion == 4:
-                    soporteTecnico.ticket_atendido()
+                    elif opcion == 3:
+                        soporteTecnico.ver_ticket_en_atencion()
 
-                elif opcion == 5:
-                    soporteTecnico.verificar_tiempo_atencion()
+                    elif opcion == 4:
+                        soporteTecnico.ticket_atendido()
 
-                elif opcion == 6:
-                    soporteTecnico.ver_historial_tickets_resueltos()
+                    elif opcion == 5:
+                        soporteTecnico.verificar_tiempo_atencion()
 
-                elif opcion == 7:
-                    soporteTecnico.historial_por_categoria()
+                    elif opcion == 6:
+                        soporteTecnico.ver_historial_tickets_resueltos()
 
-                elif opcion == 8:
-                    soporteTecnico.historial_por_prioridad()
+                    elif opcion == 7:
+                        soporteTecnico.historial_por_categoria()
 
-                elif opcion == 9:
-                    soporteTecnico.ver_tickets_cancelados()
+                    elif opcion == 8:
+                        soporteTecnico.historial_por_prioridad()
 
-                elif opcion == 10:
-                    soporteTecnico.resumen_sistema()
+                    elif opcion == 9:
+                        soporteTecnico.ver_tickets_cancelados()
 
-                elif opcion == 11:
-                    soporteTecnico.estadisticas()
+                    elif opcion == 10:
+                        soporteTecnico.resumen_sistema()
 
-                elif opcion == 12:
-                    print("Saliendo del sistema...")
-                    state = False
+                    elif opcion == 11:
+                        soporteTecnico.estadisticas()
 
-                else:
-                    print("Opción inválida")
+                    elif opcion == 12:
+                        print("Sesión cerrada, volviendo al inicio...")
+                        state = False
 
-        except ValueError:
-            print("Opción inválida, ingresá un número.")
+                    else:
+                        print("Opción inválida")
+
+            except ValueError:
+                print("Opción inválida, ingresá un número.")

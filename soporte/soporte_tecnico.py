@@ -40,13 +40,34 @@ class SoporteTecnico:
     def agregar_ticket(self, ticket: Ticket):
         prioridades = {"critica": 1, "alta": 2, "media": 3, "baja": 4}
 
-        # Delegamos la clasificacion al modulo clasificador
-        # (intenta IA, cae a palabras clave si falla)
+        # Buscar posibles duplicados por categoría
+        duplicado = None
+        for _, _, t in self.cola:
+            if t.categoria == ticket.categoria:
+                duplicado = t
+                break
+
+        if duplicado:
+            print(f"""
+        ⚠️  AVISO: Ya existe un ticket similar en la cola
+        ================================
+        Ticket #{duplicado.id} de {duplicado.nombre}
+        Categoría: {duplicado.categoria}
+        Descripción: {duplicado.descripcion}
+        ================================
+        ¿Desea continuar de todas formas? (s/n): """, end="")
+            respuesta = input().strip().lower()
+            if respuesta != "s":
+                print("Ticket no creado.")
+                return
+
+        # Clasificar prioridad
         ticket.prioridad = asignar_prioridad(ticket.descripcion, ticket.categoria)
 
         numero_prioridad = prioridades[ticket.prioridad]
         heapq.heappush(self.cola, (numero_prioridad, ticket.id, ticket))
         print(f"Ticket #{ticket.id} agregado a la cola!")
+                
 
     def posicion_ticket(self):
         if not self.cola:

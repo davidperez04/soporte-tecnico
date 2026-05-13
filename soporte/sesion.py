@@ -9,10 +9,7 @@ Roles disponibles:
 
 class Sesion:
     ROLES = {"1": "usuario", "2": "agente"}
-    CLAVES = {
-        "usuario": "user123",
-        "agente": "agente456"
-    }
+    CLAVE_AGENTE = "agente456"
 
     def __init__(self):
         self.rol_actual = None
@@ -30,20 +27,21 @@ class Sesion:
         self.rol_actual = self.ROLES.get(opcion)
 
         if not self.rol_actual:
-            print("Opción inválida, cerrando sistema.")
+            print("Opción inválida, cerrando sistema.")  # ← aquí
             return False
 
-        intentos = 3
-        while intentos > 0:
-            clave = input(f"Ingrese la contraseña de {self.rol_actual}: ")
-            if clave == self.CLAVES[self.rol_actual]:
-                break
-            intentos -= 1
-            if intentos > 0:
-                print(f"Contraseña incorrecta. Intentos restantes: {intentos}")
-            else:
-                print("Demasiados intentos fallidos, cerrando sistema.")
-                return False
+        if self.rol_actual == "agente":
+            intentos = 3
+            while intentos > 0:
+                clave = input("Ingrese la contraseña de agente: ")
+                if clave == self.CLAVE_AGENTE:
+                    break
+                intentos -= 1
+                if intentos > 0:
+                    print(f"Contraseña incorrecta. Intentos restantes: {intentos}")
+                else:
+                    print("Demasiados intentos fallidos, volviendo al inicio.")
+                    return False
 
         print(f"\nSesión iniciada como: {self.rol_actual.upper()}")
         return True
